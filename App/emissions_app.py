@@ -1,17 +1,9 @@
 import streamlit as st
 import pandas as pd
-import os
-import numpy as np
-from snowflake_to_pandas import Snowflake
-import os
-from tempfile import NamedTemporaryFile
-from pandas import DataFrame, to_datetime
 import snowflake.connector
 import plotly.graph_objects as go
 
 st.title('Carbon Intensity Comparison')
-
-DATE_COLUMN = 'date/time'
 
 
 # Initialize connection.
@@ -27,7 +19,7 @@ conn = init_connection()
 
 
 @st.experimental_memo
-def fetch_sql_df(sql: str) -> DataFrame:
+def fetch_sql_df(sql: str) -> pd.DataFrame:
     """
     query snowflake and return the result as a dataframe
     """
@@ -35,7 +27,7 @@ def fetch_sql_df(sql: str) -> DataFrame:
         curr = curr.execute(sql)
         results = curr.fetchall()
         cols = [c[0].lower() for c in curr.description]
-        return DataFrame(results, columns=cols)
+        return pd.DataFrame(results, columns=cols)
 
 
 @st.cache(ttl=24 * 60 * 60)
