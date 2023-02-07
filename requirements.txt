@@ -1,4 +1,5 @@
 pandas==1.5.3
 plotly==5.13.0
+snowflake==0.0.3
 snowflake_connector_python==3.0.0
 streamlit==1.17.0
