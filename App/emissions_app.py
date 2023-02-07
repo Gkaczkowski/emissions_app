@@ -30,7 +30,7 @@ def fetch_sql_df(sql: str) -> pd.DataFrame:
         return pd.DataFrame(results, columns=cols)
 
 
-@st.cache(ttl=24 * 60 * 60)
+@st.cache(ttl=24 * 60 * 60, )
 def load_data_1():
     sql_query_1 = 'SELECT emaps_carbonintensity_timestamp,emaps_carbonintensity_zone,' \
                   'carbon_intensity_tons_per_mwh  FROM "CASESTUDY_GARETH"."average_carbon_intensity";'
@@ -51,7 +51,7 @@ def load_data_2():
 
 
 @st.cache(ttl=24 * 60 * 60)
-def aggregate_data(df1, df2):
+def aggregate_data(df1, df2, show_spinner=False):
     df3 = pd.concat([df1, df2], copy=False).sort_values(by='datetime')
     df3.index = pd.to_datetime(df3.index, utc=True)
     df3.index = df3.index.tz_convert("US/Pacific")
@@ -60,7 +60,7 @@ def aggregate_data(df1, df2):
 
 
 @st.cache(ttl=24 * 60 * 60)
-def get_aggregated_data(data, target: str):
+def get_aggregated_data(data, target: str, show_spinner=False):
     df = data.groupby(pd.Grouper(freq=target)).mean()
     df['delta_marginal_vs_average_tons_per_mwh'] = df['moer_tons_per_mwh'] - df['carbon_intensity_tons_per_mwh']
     return df
