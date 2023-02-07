@@ -30,7 +30,7 @@ def fetch_sql_df(sql: str) -> pd.DataFrame:
         return pd.DataFrame(results, columns=cols)
 
 
-@st.cache(ttl=24 * 60 * 60, )
+@st.cache(ttl=24 * 60 * 60)
 def load_data_1():
     sql_query_1 = 'SELECT emaps_carbonintensity_timestamp,emaps_carbonintensity_zone,' \
                   'carbon_intensity_tons_per_mwh  FROM "CASESTUDY_GARETH"."average_carbon_intensity";'
@@ -42,7 +42,7 @@ def load_data_1():
 
 @st.cache(ttl=24 * 60 * 60)
 def load_data_2():
-    sql_query_2 = 'SELECT moers_timestamp,moer_tons_per_mwh,watttime_balancing_authority ' \
+    sql_query_2 = 'SELECT moers_timestamp,moer_tons_per_mwh,wattime_balancing_authority ' \
                   'FROM "CASESTUDY_GARETH"."marginal_operating_emissions_rate";'
     df2 = fetch_sql_df(sql_query_2)
     df2['datetime'] = df2['moers_timestamp']
@@ -50,8 +50,8 @@ def load_data_2():
     return df2
 
 
-@st.cache(ttl=24 * 60 * 60)
-def aggregate_data(df1, df2, show_spinner=False):
+@st.cache(ttl=24 * 60 * 60, show_spinner=False)
+def aggregate_data(df1, df2):
     df3 = pd.concat([df1, df2], copy=False).sort_values(by='datetime')
     df3.index = pd.to_datetime(df3.index, utc=True)
     df3.index = df3.index.tz_convert("US/Pacific")
@@ -59,8 +59,8 @@ def aggregate_data(df1, df2, show_spinner=False):
     return df3
 
 
-@st.cache(ttl=24 * 60 * 60)
-def get_aggregated_data(data, target: str, show_spinner=False):
+@st.cache(ttl=24 * 60 * 60, show_spinner=False)
+def get_aggregated_data(data, target: str):
     df = data.groupby(pd.Grouper(freq=target)).mean()
     df['delta_marginal_vs_average_tons_per_mwh'] = df['moer_tons_per_mwh'] - df['carbon_intensity_tons_per_mwh']
     return df
