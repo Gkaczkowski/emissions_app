@@ -1,4 +1,4 @@
 pandas==1.5.3
 plotly==5.13.0
 streamlit==1.17.0
-https://raw.githubusercontent.com/snowflakedb/snowflake-connector-python/main/tested_requirements/requirements_38.reqs
+https://raw.githubusercontent.com/snowflakedb/snowflake-connector-python/main/tested_requirements/requirements_39.reqs
